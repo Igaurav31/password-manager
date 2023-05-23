@@ -14,7 +14,7 @@ const passwordRoutes = require('./routes/passwordRoutes');
 const { isAuthenticated } = require('./middleware/authMiddleware');
 app.set('view engine', 'ejs');
 app.use(session({
-  secret: 'ourlittlesecret', 
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
