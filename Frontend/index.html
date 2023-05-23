@@ -1,1 +1,20 @@
-<h1>sample index</h1>
+<h1>Welcome to Your Password Manager</h1>
+<h2>Save your passwords and you don't have to worry about remembering multiple passwords</h2>
+<div id="passwords-container">
+  
+</div>
+<form id="add-password-form" action="/passwords" method="POST">
+  <label for="website-input">Website:</label>
+  <input type="text" id="website-input" name="websiteinput" required>
+  <label for="password-input">Password:</label>
+  <input type="password" id="password-input" name="passwordinput" required>
+  <button type="submit">Add Password</button>
+</form>
+<form action="/logout" method="GET">
+  <button type="submit">Log Out</button>
+</form>
+
+<form action="/passwords" method="GET">
+  <button type="submit">Show passwords</button>
+</form>
+

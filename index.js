@@ -1,38 +1,58 @@
+
 const express = require('express');
+const session = require('express-session');
 const app = express();
 require("dotenv").config();
 const port = 3000 || process.env.PORT;
 app.use(express.static('Frontend'));
 app.use(express.urlencoded({ extended: true }));
 const db = require('./models');
-const userCtrl = require('./controllers/userController');
-const user = require('./models/user');
-db.sequelize.sync();
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-    }
-);
+const User = db.User;
+const Userdata = db.Userdata;
+const authRoutes = require('./routes/authRoutes');
+const passwordRoutes = require('./routes/passwordRoutes');
+const { isAuthenticated } = require('./middleware/authMiddleware');
+app.set('view engine', 'ejs');
+app.use(session({
+  secret: 'ourlittlesecret', 
+  resave: false,
+  saveUninitialized: true
+}));
+
+
+// db.sequelize.sync();
+
+app.use('/', authRoutes);
+app.use('/passwords', passwordRoutes)
+
+app.get('/', isAuthenticated, (req, res) => {
+  res.sendFile(__dirname + '/Frontend/index.html');
+});
+
+
+
 
 app.get('/login', (req, res) => {
+  
     res.sendFile(__dirname + '/Frontend/login.html');
-    }
-);
-
-app.post('/login',userCtrl.login)
-
+  
+});
 
 app.get('/register', (req, res) => {
+  
     res.sendFile(__dirname + '/Frontend/register.html');
-    }
-);
+  
+});
 
-app.post('/register', (req, res) => {
-    console.log(req.body);
-    res.send('POST request to the homepage');
-    }
-); 
+app.get('/session', (req, res) => {
+  res.send(req.session);
+});
 
-app.listen(port, () => {
-    console.log('Example app listening at http://localhost:${port}');
-    }
-);
+
+db.sequelize.sync().then(() => {
+  console.log('Database synchronized');
+  // Start the server
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+});

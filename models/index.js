@@ -9,6 +9,8 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -36,8 +38,19 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
-db.User = require('./user')(sequelize, Sequelize);
-db.Userdata = require('./userdata')(sequelize, Sequelize);
+
+const User = require('./user')(sequelize, Sequelize);
+const Userdata = require('./userdata')(sequelize, Sequelize);
+
+db.User = User;
+db.Userdata = Userdata;
+
+// Define associations between User and Userdata
+db.User.hasMany(db.Userdata, { as: 'userDatas', foreignKey: 'userId' });
+db.Userdata.belongsTo(db.User, { foreignKey: 'userId' });
+
+
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
