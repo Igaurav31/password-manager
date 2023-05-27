@@ -12,5 +12,15 @@ router.post('/register', authController.register);
 // Login route
 router.post('/login', authController.login);
 
+
+router.get('/register', (req, res) => {
+    const error = req.flash('error');
+    res.render('register', {error});
+});
+
+router.get('/login', (req, res) => {
+    const error = req.flash('error');
+    res.render('login', {error});
+});
 router.get('/logout', authController.logout);
 module.exports = router;

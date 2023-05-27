@@ -1,4 +1,9 @@
 <h1>Login</h1>
+<% if (error && error.length > 0) { %>
+  <div class="flash-error">
+    <%= error[0] %>
+  </div>
+<% } %>
 <form action="/login" method="post">  
     <div class="container">   
       <label>Email:</label>
@@ -6,7 +11,7 @@
       <label>Password:</label>   
       <input type="password" placeholder="Enter Password" name="password" required>  
       <button type="submit">Login</button>   
-      New user? <a href="register.html">Register</a>
+      New user? <a href="/register">Register</a>
     </div>   
   </form>
   

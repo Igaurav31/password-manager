@@ -13,11 +13,13 @@ const authRoutes = require('./routes/authRoutes');
 const passwordRoutes = require('./routes/passwordRoutes');
 const { isAuthenticated } = require('./middleware/authMiddleware');
 app.set('view engine', 'ejs');
+const flash = require('express-flash');
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
+app.use(flash());
 
 
 // db.sequelize.sync();
@@ -26,23 +28,10 @@ app.use('/', authRoutes);
 app.use('/passwords', passwordRoutes)
 
 app.get('/', isAuthenticated, (req, res) => {
-  res.sendFile(__dirname + '/Frontend/index.html');
+  res.render('index', {user: req.session.user});
 });
 
 
-
-
-app.get('/login', (req, res) => {
-  
-    res.sendFile(__dirname + '/Frontend/login.html');
-  
-});
-
-app.get('/register', (req, res) => {
-  
-    res.sendFile(__dirname + '/Frontend/register.html');
-  
-});
 
 app.get('/session', (req, res) => {
   res.send(req.session);
